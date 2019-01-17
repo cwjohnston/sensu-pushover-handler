@@ -13,10 +13,10 @@ import (
 )
 
 var (
-	app_token string
-	user_key  string
-	stdin     *os.File
-	debug     bool
+	appToken string
+	userKey  string
+	stdin    *os.File
+	debug    bool
 )
 
 func main() {
@@ -34,7 +34,7 @@ func configureRootCommand() *cobra.Command {
 		RunE:  run,
 	}
 
-	cmd.Flags().StringVarP(&app_token,
+	cmd.Flags().StringVarP(&appToken,
 		"app.token",
 		"a",
 		os.Getenv("PUSHOVER_APP_TOKEN"),
@@ -42,7 +42,7 @@ func configureRootCommand() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("app.token")
 
-	cmd.Flags().StringVarP(&user_key,
+	cmd.Flags().StringVarP(&userKey,
 		"user.key",
 		"u",
 		os.Getenv("PUSHOVER_USER_KEY"),
@@ -86,8 +86,8 @@ func run(cmd *cobra.Command, args []string) error {
 }
 
 func notifyPushover(event *types.Event) error {
-	app := pushover.New(app_token)
-	recipient := pushover.NewRecipient(user_key)
+	app := pushover.New(appToken)
+	recipient := pushover.NewRecipient(userKey)
 	message := &pushover.Message{
 		Title:   fmt.Sprintf("%s/%s", event.Entity.Name, event.Check.Name),
 		Message: event.Check.Output,
