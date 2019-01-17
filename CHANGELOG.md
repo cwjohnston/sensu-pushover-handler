@@ -7,6 +7,8 @@ Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 
+## [0.0.2] - 2019-01-17
+
 ### Changed
 - Fixed support for app token and user key via env vars
 
