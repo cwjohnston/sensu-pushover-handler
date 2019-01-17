@@ -34,21 +34,24 @@ func configureRootCommand() *cobra.Command {
 		RunE:  run,
 	}
 
+	/*
+	   Security Sensitive flags
+	     - default to using envvar value
+	     - do not mark as required
+	     - manually test for empty value
+	*/
+
 	cmd.Flags().StringVarP(&appToken,
 		"app.token",
 		"a",
 		os.Getenv("PUSHOVER_APP_TOKEN"),
 		"Pushover v1 API app token, use default from PUSHOVER_APP_TOKEN env var")
 
-	_ = cmd.MarkFlagRequired("app.token")
-
 	cmd.Flags().StringVarP(&userKey,
 		"user.key",
 		"u",
 		os.Getenv("PUSHOVER_USER_KEY"),
 		"Pushover v1 API user key, use default from PUSHOVER_USER_KEY env var")
-
-	_ = cmd.MarkFlagRequired("user.key")
 
 	return cmd
 }
@@ -61,6 +64,16 @@ func run(cmd *cobra.Command, args []string) error {
 
 	if stdin == nil {
 		stdin = os.Stdin
+	}
+
+	if appToken == "" {
+		_ = cmd.Help()
+		return fmt.Errorf("app token is empty")
+	}
+
+	if userKey == "" {
+		_ = cmd.Help()
+		return fmt.Errorf("user key is empty")
 	}
 
 	eventJSON, err := ioutil.ReadAll(stdin)
